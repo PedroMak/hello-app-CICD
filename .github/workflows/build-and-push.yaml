@@ -1,6 +1,6 @@
 name: Build and Push Image to DockerHub
 
-on: workflow_dispatch
+on: push
 
 jobs:
   build-and-push:
@@ -17,3 +17,30 @@ jobs:
         with:
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/hello-app:${{ github.ref_name }}-v${{ github.run_number }}
+
+      - name: Checkout Manifests
+        uses: actions/checkout@v4
+        with:
+          repository: PedroMak/hello-manifests-CICD
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          path: manifests
+        
+      - name: Install YAML Query
+        run: |
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+          sudo chmod +x /usr/bin/yq
+        
+      - name: Change Image Name
+        env:
+          IMAGE_TAG: ${{ vars.DOCKERHUB_USERNAME }}/hello-app:${{ github.ref_name }}-v${{ github.run_number }}
+        run: |
+          yq eval -i ".spec.template.spec.containers[0].image = \"$IMAGE_TAG\"" manifests/helloapp-deployment.yaml
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          path: manifests
+          branch: update/new-image
+          title: "Update image to a new tag"
+          commit-message: "update: updating image tag"
