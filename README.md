@@ -113,6 +113,28 @@ jobs:
 ![build-push-pr-create](./images/build-push-pr-create.png)
 * E a imagem no DockerHub agora possui duas tags:</br>
 ![two-tags](./images/two-tags.png)
-> [!NOTE]
-> Essas tags foram geradas apenas para fins de teste, a aplicação em si ainda não foi alterada.
 
+* Pode ser verificado a criação de um `pull request`:</br>
+![pull_request](./images/pull-request.png)
+* Ao ser aceito, alterou a imagem no manifesto do `deployment`:</br>
+![deployment-update](./images/update1-deployment.png)
+> [!NOTE]
+> Essas tags (main-v1 e main-v2) foram geradas apenas para fins de teste, a aplicação main.py em si ainda não foi alterada.
+# Alterando mensagem da aplicação:
+* Ao realizar o push da alteração da mensagem da aplicação, o workflow foi novamente disparado e gerou uma nova tag no DockerHub:</br>
+![three-tags](./images/three-tags.png)
+* E gerou também um novo `pull request`:</br>
+![pull-request-detailed](./images/pull-request-detailed.png)
+* Após realizar o merge e aguardar alguns minutos, o ArgoCD detectou a alteração e a aplicação saiu de sincronia:</br>
+![argocd-sync](./images/argocd-sync.png)
+* Após a sincronia a visualização do app na UI do ArgoCD ficou a seguinte:</br>
+![argocd-post-sync](./images/argocd-post-sync.png)
+> [!NOTE]
+> O Replica Set antigo foi mantido para casos em que haja necessidade de realizar um rollback.
+* No `PowerShell` podemos visualizar o pod criado também rodando `kubectl get pods`:</br>
+![kubectl-get-pods](./images/kubectl-get-pods.png)
+* Ao realizarmos novamento o `port-forward` no nosso `service` iremos ver que a mensagem foi atualizada:</br>
+![new-message](./images/new-message.png)
+#
+### Com isso finalizamos o projeto! 🥳 <br/>
+### Obrigado! 😎
