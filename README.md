@@ -9,7 +9,7 @@
 * Git instalado;
 * Python 3 e Docker instalados;
 
-#### Serão criado dois repositórios: um repositório irá conter a aplicação FastAPI, o Dockerfile e o GitHub Actionc Workflow, já o outro irá conter os manifestos Kubernetes e ArgoCD.
+#### Serão criados dois repositórios: um repositório irá conter a aplicação FastAPI, o Dockerfile e o GitHub Actionc Workflow, já o outro irá conter os manifestos Kubernetes e ArgoCD.
 
 
 ## Repositório 1 - Aplicação FastAPI, Dockerfile e GitHub Actions Workflow:
@@ -42,7 +42,7 @@ jobs:
           tags: ${{ vars.DOCKERHUB_USERNAME }}/hello-app:${{ github.ref_name }}-v${{ github.run_number }}
 ```
 
-* Foram utilizadas duas `Actions` oficiais e mantidas pelo `Docker`, uma que fazer o login no DockerHub e outra que faz o build da imagem eseu upload;
+* Foram utilizadas duas `Actions` oficiais e mantidas pelo `Docker`, uma que fazer o login no DockerHub e outra que faz o build da imagem e seu upload;
 * Para isso foi necessário a criação de um `secret` contendo um token de acesso gerado no DockerHub e uma `variable` contendo o meu nome de usuário no DockerHub;
 * No parâmetro `tag` utilizei os `contexts` para nomeação dinâmica:
 * Em `${{ vars.DOCKERHUB_USERNAME }}/hello-app:${{ github.ref_name }}-v${{ github.run_number }}`
@@ -60,7 +60,7 @@ jobs:
 * Foram criados:
   * Um manifesto de um `service` do tipo `ClusterIP`, que será acessado posteriormente via `port-forward`;
   * Um manifesto de um `deployment` com uma réplica e com a imagem da aplicação no DockerHub;
-  * O manifesto da aplicação ArgoCD que estará observando este mesmo repositório e aplicando as alterações no meu cluster local.
+  * O manifesto da aplicação ArgoCD que estará observando o repositório dos manifestos e aplicando as alterações no meu cluster local.
 * Para verificar o funcionamento, dentro do diretório onde o manifesto ArgoCD se encontra, rodamos `kubectl apply -f <nome_do_arquivo>.yaml`:
   * Ao rodar `kubectl get all` podemos visualizar que os componente foram criados:</br>
   ![kubectl-get-all](./images/kubectl-get-all.png)
@@ -127,7 +127,7 @@ jobs:
 ![pull-request-detailed](./images/pull-request-detailed.png)
 * Após realizar o merge e aguardar alguns minutos, o ArgoCD detectou a alteração e a aplicação saiu de sincronia:</br>
 ![argocd-sync](./images/argocd-sync.png)
-* Após a sincronia a visualização do app na UI do ArgoCD ficou a seguinte:</br>
+* Após a sincronia, a visualização do app na UI do ArgoCD ficou a seguinte:</br>
 ![argocd-post-sync](./images/argocd-post-sync.png)
 > [!NOTE]
 > O Replica Set antigo foi mantido para casos em que haja necessidade de realizar um rollback.

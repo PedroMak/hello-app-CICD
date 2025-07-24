@@ -1,5 +1,6 @@
 name: Build and Push Image to DockerHub
 
+# Originalmente o trigger era "on: push", mas alterei para que o workflow não ficasse sendo disparado toda hora que eu fizesse um push
 on: workflow_dispatch
 
 jobs:
