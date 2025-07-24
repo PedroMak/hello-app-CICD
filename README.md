@@ -135,6 +135,16 @@ jobs:
 ![kubectl-get-pods](./images/kubectl-get-pods.png)
 * Ao realizarmos novamento o `port-forward` no nosso `service` iremos ver que a mensagem foi atualizada:</br>
 ![new-message](./images/new-message.png)
+* Para finalizar, alterei o trigger do workflow para:
+```
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - main.py
+```
+* Dessa forma, o workflow será disparado apenas quando a alteração for feita em [main.py](https://github.com/PedroMak/hello-app-CICD/blob/main/main.py) na `main branch`.
 #
 ### Com isso finalizamos o projeto! 🥳 <br/>
 ### Obrigado! 😎
